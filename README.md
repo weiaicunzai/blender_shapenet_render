@@ -1,1 +1,2 @@
-# IOS-App-Store-
+# blender script for rendering shape models
+
