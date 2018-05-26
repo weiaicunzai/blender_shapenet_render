@@ -15,10 +15,39 @@ g_view_point_file ={
     'chair' : '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/data/view_distribution/chair.txt'
 }
 
+#output:
+
 #folders to store synthetic data
 g_syn_rgb_folder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_rgb'
 g_syn_depth_folder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_depth'
 g_syn_pose_foloder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_pose'
+
+#enum in [‘BW’, ‘RGB’, ‘RGBA’], default ‘BW’
+g_color_mode = 'RGB'
+#enum in [‘8’, ‘10’, ‘12’, ‘16’, ‘32’], default ‘8’
+g_color_depth = '16'
+g_file_format = 'PNG'
+
+
+#dimension:
+
+#engine type [CYCLES, BLENDER_RENDER]
+g_engine_type = 'CYCLES'
+
+#output image size =  (g_resolution_x * resolution_percentage%, g_resolution_y * resolution_percentage%)
+g_resolution_x = 1920
+g_resolution_y = 1080
+g_resolution_percentage = 100
+
+
+#performance:
+
+g_gpu_render_enable = True
+
+#if you are using gpu render, recommand to set hilbert spiral to 256 or 512
+#default value for cpu render is fine
+g_hilbert_spiral = 512 
+
 
 #total 55 categories
 g_shapenet_categlory_pair = {
