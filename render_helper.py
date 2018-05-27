@@ -5,6 +5,9 @@ data to the format we want
 Available functions:
 - load_viewpoint: read viewpoint file
 - load_object_list: return a list of object file pathes
+- camera_location: return a tuple contains camera location (x, y, z)
+    in world coordinates system
+- camera_rot_XYZEuler: return a tuple contains cmera ration
 
 author baiyu
 """
@@ -86,9 +89,42 @@ def camera_location(azimuth, elevation, dist):
     #convert azimuth, elevation degree to radians
     phi = float(elevation) * math.pi / 360
     theta = float(azimuth) * math.pi / 360
+    dist = float(dist)
 
     x = dist * math.cos(phi) * math.cos(theta)
     y = dist * math.cos(phi) * math.sin(theta)
     z = dist * math.sin(phi)
 
     return x, y, z
+
+def camera_rot_XYZEuler(azimuth, elevation, tilt):
+    """get camera rotaion in XYZEuler
+
+    Args:
+        azimuth: azimuth degree(object centerd)
+        elevation: elevation degree(object centerd)
+        tilt: twist degree(object centerd)
+    
+    Returns:
+        return the camera rotation in Euler angles(XYZ ordered)
+    """
+
+    azimuth, elevation, tilt = float(azimuth), float(elevation), float(tilt)
+    x, y, z = 90, 0, 90 #set camera at x axis facing towards object
+
+    #twist
+    if tilt > 0:
+        y = tilt
+    else:
+        y = 360 - tilt
+
+    #latitude
+    x = x - elevation
+    #longtitude
+    z = z - azimuth
+
+    return x, y, z
+
+    
+
+

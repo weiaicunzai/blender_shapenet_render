@@ -15,6 +15,10 @@ g_view_point_file ={
     'chair' : '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/data/view_distribution/chair.txt'
 }
 
+#camera:
+#enum in [‘QUATERNION’, ‘XYZ’, ‘XZY’, ‘YXZ’, ‘YZX’, ‘ZXY’, ‘ZYX’, ‘AXIS_ANGLE’]
+g_rotation_mode = 'XYZ'
+
 #output:
 
 #folders to store synthetic data
