@@ -18,6 +18,8 @@ g_view_point_file ={
 #camera:
 #enum in [‘QUATERNION’, ‘XYZ’, ‘XZY’, ‘YXZ’, ‘YZX’, ‘ZXY’, ‘ZYX’, ‘AXIS_ANGLE’]
 g_rotation_mode = 'XYZ'
+g_depth_clip_start = 0.5
+g_depth_clip_end = 4
 
 #output:
 
@@ -27,11 +29,17 @@ g_syn_depth_folder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_dept
 g_syn_pose_foloder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_pose'
 
 #enum in [‘BW’, ‘RGB’, ‘RGBA’], default ‘BW’
-g_color_mode = 'RGB'
+g_rgb_color_mode = 'RGB'
 #enum in [‘8’, ‘10’, ‘12’, ‘16’, ‘32’], default ‘8’
-g_color_depth = '16'
-g_file_format = 'PNG'
+g_rgb_color_depth = '16'
+g_rgb_file_format = 'PNG'
 
+g_depth_color_mode = 'BW'
+g_depth_color_depth = '8'
+g_depth_file_format = 'PNG'
+
+g_depth_use_overwrite = True
+g_depth_use_file_extension = True
 
 #dimension:
 
@@ -41,7 +49,7 @@ g_engine_type = 'CYCLES'
 #output image size =  (g_resolution_x * resolution_percentage%, g_resolution_y * resolution_percentage%)
 g_resolution_x = 1920
 g_resolution_y = 1080
-g_resolution_percentage = 100
+g_resolution_percentage = 50
 
 
 #performance:
@@ -52,6 +60,7 @@ g_gpu_render_enable = True
 #default value for cpu render is fine
 g_hilbert_spiral = 512 
 
+g_render_objs = ['chair']
 
 #total 55 categories
 g_shapenet_categlory_pair = {

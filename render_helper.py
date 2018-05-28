@@ -87,8 +87,8 @@ def camera_location(azimuth, elevation, dist):
     """
 
     #convert azimuth, elevation degree to radians
-    phi = float(elevation) * math.pi / 360
-    theta = float(azimuth) * math.pi / 360
+    phi = float(elevation) * math.pi / 180 
+    theta = float(azimuth) * math.pi / 180
     dist = float(dist)
 
     x = dist * math.cos(phi) * math.cos(theta)
@@ -106,7 +106,7 @@ def camera_rot_XYZEuler(azimuth, elevation, tilt):
         tilt: twist degree(object centerd)
     
     Returns:
-        return the camera rotation in Euler angles(XYZ ordered)
+        return the camera rotation in Euler angles(XYZ ordered) in radians
     """
 
     azimuth, elevation, tilt = float(azimuth), float(elevation), float(tilt)
@@ -116,14 +116,14 @@ def camera_rot_XYZEuler(azimuth, elevation, tilt):
     if tilt > 0:
         y = tilt
     else:
-        y = 360 - tilt
+        y = 360 + tilt
 
     #latitude
     x = x - elevation
     #longtitude
-    z = z - azimuth
+    z = z + azimuth
 
-    return x, y, z
+    return x * math.pi / 180, y * math.pi / 180, z * math.pi / 180
 
     
 
