@@ -17,11 +17,9 @@ if __name__ == '__main__':
 
     #render rgb
  #   command = [g_blender_excutable_path, '--background', '--python', 'render_rgb.py']
- #   result = subprocess.run(command, stdout=subprocess.PIPE)
- #   print(result.stdout.decode())
+ #   result = subprocess.run(command)
 
     #render depth
     command = [g_blender_excutable_path, '--background', '--python', 'render_depth.py']
-    result = subprocess.run(command, stdout=subprocess.PIPE)
-    print(result.stdout.decode())
+    result = subprocess.run(command)
 
