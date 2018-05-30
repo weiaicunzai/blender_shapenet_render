@@ -20,6 +20,6 @@ if __name__ == '__main__':
     subprocess.run(command)
 
     #render depth
-#    command = [g_blender_excutable_path, '--background', '--python', 'render_depth.py']
-#    subprocess.run(command)
+    command = [g_blender_excutable_path, '--background', '--python', 'render_depth.py']
+    subprocess.run(command)
 
