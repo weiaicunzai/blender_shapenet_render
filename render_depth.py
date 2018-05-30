@@ -36,8 +36,8 @@ def scene_setting_init(use_gpu):
     bpy.data.scenes[sce].render.engine = g_engine_type
 
     #output
-    bpy.data.scenes[sce].render.image_settings.color_mode = g_depth_color_mode
-    bpy.data.scenes[sce].render.image_settings.color_depth = g_depth_color_depth
+   # bpy.data.scenes[sce].render.image_settings.color_mode = g_depth_color_mode
+   # bpy.data.scenes[sce].render.image_settings.color_depth = g_depth_color_depth
     bpy.data.scenes[sce].render.image_settings.file_format = g_depth_file_format
     bpy.data.scenes[sce].render.use_overwrite = g_depth_use_overwrite
     bpy.data.scenes[sce].render.use_file_extension = g_depth_use_file_extension 
@@ -58,6 +58,12 @@ def scene_setting_init(use_gpu):
         bpy.data.scenes[sce].cycles.device = 'GPU'
 
 def node_setting_init():
+    """ node settings for z pass
+
+    we are using a map value node to map the
+    z pass value to [0.5, 4] (meters)
+    """
+
     bpy.context.scene.use_nodes = True
     tree = bpy.context.scene.node_tree
     links = tree.links
@@ -85,29 +91,29 @@ def node_setting_init():
     links.new(map_value_node.outputs[0], file_output_node.inputs[0])
 
 def camera_setting_init():
+    """camera settings for render
+
+    the first tow line can be commented, just in case you forgot to
+    set map value node
+    """
     bpy.data.cameras['Camera'].clip_start = g_depth_clip_start
     bpy.data.cameras['Camera'].clip_end = g_depth_clip_end
     bpy.data.objects['Camera'].rotation_mode = g_rotation_mode
 
+def render(obj_path, viewpoints):
+    """render z pass 
 
-scene_setting_init(g_gpu_render_enable)
-camera_setting_init()
-node_setting_init()
+    render a object z pass map by given camera viewpoints
 
-######change result to iterater
-obj_path_list = load_object_list(g_render_objs)
-viewpoint_list = load_viewpoint(g_view_point_file['chair'])
-
-for obj_id, obj_p in enumerate(obj_path_list):
-    clear_mesh()
-    bpy.ops.import_scene.obj(filepath=obj_p)
+    Args:
+        obj_path: a string variable indicate the obj file path
+        viewpoints: a generator of cmera viewpoints
+    """
 
     for index, vp in enumerate(viewpoint_list):
-        if index != 81:
-            continue
         cam_location = camera_location(vp.azimuth, vp.elevation, vp.distance)
         cam_rot = camera_rot_XYZEuler(vp.azimuth, vp.elevation, vp.tilt)
-
+   
         bpy.data.objects['Camera'].location[0] = cam_location[0]
         bpy.data.objects['Camera'].location[1] = cam_location[1]
         bpy.data.objects['Camera'].location[2] = cam_location[2]
@@ -120,12 +126,23 @@ for obj_id, obj_p in enumerate(obj_path_list):
             os.mkdir(g_syn_depth_folder)
 
         file_output_node = bpy.context.scene.node_tree.nodes[2]
-        file_output_node.file_slots[0].path = 'blender-######.color.png' # blender placeholder #
+        file_output_node.file_slots[0].path = 'blender-######.depth.png' # blender placeholder #
         bpy.context.scene.frame_set(index + 1)
 
         bpy.ops.render.render(write_still=True)
 
-        if index == 81:
-            print('cam_location:', cam_location)
-            print('cam_rot:', cam_rot)
-            print('vp', vp)
+
+
+scene_setting_init(g_gpu_render_enable)
+camera_setting_init()
+node_setting_init()
+
+obj_path_list = load_object_list(g_render_objs)
+viewpoint_list = load_viewpoint(g_view_point_file['chair'])
+
+for obj_path_list in obj_path_list:
+    for obj_p in obj_path_list:
+        clear_mesh()
+        bpy.ops.import_scene.obj(filepath=obj_p)
+        render(obj_p, viewpoint_list)
+

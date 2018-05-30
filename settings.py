@@ -15,6 +15,14 @@ g_view_point_file ={
     'chair' : '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/data/view_distribution/chair.txt'
 }
 
+g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/datasets/sun2012pascalformat/JPEGImages'
+
+
+#background image composite
+#enum in [‘RELATIVE’, ‘ABSOLUTE’, ‘SCENE_SIZE’, ‘RENDER_SIZE’], default ‘RELATIVE’
+g_scale_space = 'RENDER_SIZE'
+g_use_film_transparent = True
+
 #camera:
 #enum in [‘QUATERNION’, ‘XYZ’, ‘XZY’, ‘YXZ’, ‘YZX’, ‘ZXY’, ‘ZYX’, ‘AXIS_ANGLE’]
 g_rotation_mode = 'XYZ'

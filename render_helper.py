@@ -4,7 +4,7 @@ data to the format we want
 
 Available functions:
 - load_viewpoint: read viewpoint file
-- load_object_list: return a list of object file pathes
+- load_object_list: return a generator of object file pathes
 - camera_location: return a tuple contains camera location (x, y, z)
     in world coordinates system
 - camera_rot_XYZEuler: return a tuple contains cmera ration
@@ -30,14 +30,12 @@ def load_viewpoint(viewpoint_file):
         for each function call
 
     Returns: 
-        list of viewpoint parameters(contains azimuth,elevation,tilt angles and distance)
+        generator of viewpoint parameters(contains azimuth,elevation,tilt angles and distance)
     """
-    params = []
     Param = namedtuple('Param',['azimuth', 'elevation', 'tilt', 'distance'])
     with open(viewpoint_file) as viewpoints:
         for line in viewpoints.readlines():
-            params.append(Param(*line.strip().split()))
-    return params
+            yield Param(*line.strip().split())
 
 def load_object_list(category=None):
     """
@@ -48,7 +46,7 @@ def load_object_list(category=None):
             we want render
 
     Returns:
-        list of obj file pathes
+        list of gnerators of obj file pathes
     """
     
     #type checking
@@ -62,13 +60,11 @@ def load_object_list(category=None):
         except TypeError:
             print("category should be an iterable object")
 
-    result = []
     #load obj file path
     for cat in category:
         num = g_shapenet_categlory_pair[cat]
         search_path = os.path.join(g_shapenet_path, num, '**','*.obj')
-        result.extend(list(glob.iglob(search_path, recursive=True)))
-    return result
+        yield glob.iglob(search_path, recursive=True)
 
 def camera_location(azimuth, elevation, dist):
     """get camera_location (x, y, z)
