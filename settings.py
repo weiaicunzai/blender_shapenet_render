@@ -9,13 +9,21 @@ author baiyu
 g_shapenet_path = '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/datasets/shapenetcore'
 g_blender_excutable_path = '/home/admin-bai/Downloads/blender-2.79b-linux-glibc219-x86_64/blender'
 
+
+
 #if you have multiple viewpoint files, add to the dict
 #files contains azimuth,elevation,tilt angles and distance for each row
 g_view_point_file ={
-    'chair' : '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/data/view_distribution/chair.txt'
+    'chair' : 'view_points/chair.txt'
 }
 
-g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/datasets/sun2012pascalformat/JPEGImages'
+g_background_image_path = 'background_image'
+
+#folders to store synthetic data
+g_syn_rgb_folder = 'syn_rgb'
+g_syn_depth_folder = 'syn_depth'
+g_syn_pose_foloder = 'syn_pose'
+
 
 
 #background image composite
@@ -30,11 +38,6 @@ g_depth_clip_start = 0.5
 g_depth_clip_end = 4
 
 #output:
-
-#folders to store synthetic data
-g_syn_rgb_folder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_rgb'
-g_syn_depth_folder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_depth'
-g_syn_pose_foloder = '/media/admin-bai/000CA9E800027341/Untitled Folder/syn_pose'
 
 #enum in [‘BW’, ‘RGB’, ‘RGBA’], default ‘BW’
 g_rgb_color_mode = 'RGB'

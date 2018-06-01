@@ -23,3 +23,7 @@ if __name__ == '__main__':
     command = [g_blender_excutable_path, '--background', '--python', 'render_depth.py']
     subprocess.run(command)
 
+    #write pose
+    command = [g_blender_excutable_path, '--background', '--python', 'render_pose.py']
+    subprocess.run(command)
+

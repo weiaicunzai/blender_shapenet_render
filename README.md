@@ -1,10 +1,7 @@
-# blender script for rendering shape models
+# blender script for rendering ShapeNet models
 
-
-
-
-blender script for rendering images using shapenet models
-
+This repo contains the implementation of Blender Python script for rendering 
+ShapeNet obj files
 
 *given a obj file, this project can generate:*
 * rgb image

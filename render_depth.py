@@ -78,8 +78,8 @@ def node_setting_init():
     map_value_node.offset[0] = -g_depth_clip_start
     map_value_node.size[0] = 1 / (g_depth_clip_end - g_depth_clip_start)
     map_value_node.use_min = True
-    map_value_node.min[0] = 0.0
     map_value_node.use_max = True
+    map_value_node.min[0] = 0.0
     map_value_node.max[0] = 1.0
 
     file_output_node.format.color_mode = g_depth_color_mode
@@ -130,6 +130,7 @@ def render(obj_path, viewpoints):
         bpy.context.scene.frame_set(index + 1)
 
         bpy.ops.render.render(write_still=True)
+        break
 
 
 

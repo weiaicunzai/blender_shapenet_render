@@ -1,0 +1,3 @@
+/home/admin-bai/Downloads/blender_shapenet_render/build/CMakeFiles/edit_cache.dir
+/home/admin-bai/Downloads/blender_shapenet_render/build/CMakeFiles/rebuild_cache.dir
+/home/admin-bai/Downloads/blender_shapenet_render/build/CMakeFiles/test.dir
