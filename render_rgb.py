@@ -119,8 +119,6 @@ def render(obj_path, viewpoints):
         file_output_node.file_slots[0].path = 'blender-######.color.png' # blender placeholder #
         bpy.context.scene.frame_set(index + 1)
 
-        #bpy.data.scenes['Scene'].render.filepath = os.path.join(g_syn_rgb_folder, 'blender-{:06}.color.png'.format(index + 1))
-
         bpy.ops.render.render(write_still=True)
 
 
