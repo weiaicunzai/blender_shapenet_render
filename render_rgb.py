@@ -124,6 +124,7 @@ def render(obj_path, viewpoints):
         bpy.ops.render.render(write_still=True)
 
 
+
 scene_setting_init(g_gpu_render_enable)
 node_setting_init()
 

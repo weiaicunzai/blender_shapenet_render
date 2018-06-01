@@ -50,6 +50,7 @@ def render(obj_path, viewpoints):
         np.savetxt(os.path.join(g_syn_pose_foloder, 'blender-{:06}.pose.txt'.format(index + 1)), m)
 
 
+
 for obj_path_list in obj_path_list:
     for obj_p in obj_path_list:
         render(obj_p, viewpoint_list)

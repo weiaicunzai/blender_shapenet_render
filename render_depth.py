@@ -130,7 +130,6 @@ def render(obj_path, viewpoints):
         bpy.context.scene.frame_set(index + 1)
 
         bpy.ops.render.render(write_still=True)
-        break
 
 
 
