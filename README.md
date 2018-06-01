@@ -55,4 +55,4 @@ you can obtain the viewpoints file using [this](https://github.com/ShapeNet/Rend
 python run_render.py
 ```
 
-this python file will render the rgb, depth image and generate pose file.
+this command will render the rgb, depth image and generate pose file.
