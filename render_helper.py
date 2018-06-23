@@ -109,10 +109,10 @@ def camera_rot_XYZEuler(azimuth, elevation, tilt):
     x, y, z = 90, 0, 90 #set camera at x axis facing towards object
 
     #twist
-    if tilt > 0:
-        y = tilt
-    else:
-        y = 360 + tilt
+    #if tilt > 0:
+    #    y = tilt
+    #else:
+    #    y = 360 + tilt
 
     #latitude
     x = x - elevation

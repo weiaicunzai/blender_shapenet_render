@@ -17,12 +17,13 @@ g_view_point_file ={
     'chair' : 'view_points/chair.txt'
 }
 
-g_background_image_path = 'background_image'
+#change this path to your background image folder
+g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/SUN2012pascalformat/JPEGImages'
 
 #folders to store synthetic data
 g_syn_rgb_folder = 'syn_rgb'
 g_syn_depth_folder = 'syn_depth'
-g_syn_pose_foloder = 'syn_pose'
+g_syn_pose_folder = 'syn_pose'
 
 
 
@@ -71,7 +72,7 @@ g_gpu_render_enable = True
 #default value for cpu render is fine
 g_hilbert_spiral = 512 
 
-g_render_objs = ['chair']
+g_render_objs = ['chair', 'table', 'sofa', 'bed', 'bookshelf']
 
 #total 55 categories
 g_shapenet_categlory_pair = {

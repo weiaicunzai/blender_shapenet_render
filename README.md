@@ -43,11 +43,20 @@ background images(recommend PASCAL VOC)
 
 ### 1. configuration file
 
-all the configurations needed are in '''settings.py''', you need to set your own:
-ShapeNet dataset path(```g_shapenet_path```)
-Blender executable path(```g_blender_excutable_path```)
+**you need to change the settings.py file before you run the python file!!!**
 
-you can obtain the viewpoints file using [this](https://github.com/ShapeNet/RenderForCNN) repo
+all the configurations needed are in '''settings.py''', you need to set your own:  
+- ShapeNet dataset path: ```g_shapenet_path```
+- Blender executable path: ```g_blender_excutable_path```
+
+
+and other configurations you might want to change:
+- background image folder path: ```g_background_image_path```
+- synthetic rgb image folder path: ```g_syn_rgb_folder```
+- synthetic depth image folder path: ```g_syn_depth_folder```
+- pose folder: ```g_syn_pose_foloder```
+
+for more configuration informations, plz refer to [Blender API Document](https://docs.blender.org/api/2.79/)
 
 ### 2. start rendering
 

@@ -47,7 +47,10 @@ def render(obj_path, viewpoints):
          [2*q[1]*q[3]-2*q[0]*q[2],   2*q[2]*q[3]+2*q[0]*q[1],   1-2*q[1]*q[1]-2*q[2]*q[2], cam_location[2]],
          [0,                         0,                         0,                         1]])
         
-        np.savetxt(os.path.join(g_syn_pose_foloder, 'blender-{:06}.pose.txt'.format(index + 1)), m)
+        if not os.path.exists(g_syn_pose_folder):
+            os.mkdir(g_syn_pose_folder)
+
+        np.savetxt(os.path.join(g_syn_pose_folder, 'blender-{:06}.pose.txt'.format(index + 1)), m)
 
 
 
