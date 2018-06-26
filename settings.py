@@ -35,7 +35,9 @@ g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/SUN2012pascalf
 g_syn_rgb_folder = 'syn_rgb'
 g_syn_depth_folder = 'syn_depth'
 g_syn_pose_folder = 'syn_pose'
-
+g_temp = 'tmp_data'
+g_tmp_path = 'path.p'
+g_tmp_vp = 'vp.p'
 
 
 #background image composite

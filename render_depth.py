@@ -197,8 +197,8 @@ def init_all():
 
 init_all()
 
-obj_path = pickle.load(open("tmp_data/path.p", 'rb'))
-vps = pickle.load(open("tmp_data/vp.p", 'rb'))
+obj_path = pickle.load(open(os.path.join(g_temp, g_tmp_path), 'rb'))
+vps = pickle.load(open(os.path.join(g_temp, g_tmp_vp), 'rb'))
 
 obj_path = [obj_path[name] for name in g_render_objs]
 vps = [vps[name] for name in g_render_objs]

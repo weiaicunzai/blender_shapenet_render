@@ -3,7 +3,14 @@
 Aviable function:
 - clear_mash: delete all the mesh in the secene
 - scene_setting_init: set scene configurations
-
+- node_setting_init: set node configurations
+- render: render rgb image for one obj file and one viewpoint
+- render_obj_by_vp_lists: wrapper function for render() render 
+                          one obj file by multiple viewpoints
+- render_objs_by_one_vp: wrapper function for render() render
+                         multiple obj file by one viewpoint
+- init_all: a wrapper function, initialize all configurations                          
+= set_image_path: reset defualt image output folder
 
 author baiyu
 """
@@ -199,8 +206,8 @@ init_all()
 ### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 
-obj_path = pickle.load(open("tmp_data/path.p", 'rb'))
-vps = pickle.load(open("tmp_data/vp.p", 'rb'))
+obj_path = pickle.load(open(os.path.join(g_temp, g_tmp_path), 'rb'))
+vps = pickle.load(open(os.path.join(g_temp, g_tmp_vp), 'rb'))
 
 obj_path = [obj_path[name] for name in g_render_objs]
 vps = [vps[name] for name in g_render_objs]

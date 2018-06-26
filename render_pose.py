@@ -63,7 +63,7 @@ def render_pose_by_vp_lists(pose_folder, viewpoints):
         viewpoints: a list of viewpoint
     """
 
-    if isinstance(tuple, viewpoints):
+    if isinstance(viewpoints, tuple):
         vps = [viewpoints]
     
     try:
@@ -74,7 +74,7 @@ def render_pose_by_vp_lists(pose_folder, viewpoints):
     for vp in vps:
         render(pose_folder, vp)
 
-vps = pickle.load(open("tmp_data/vp.p", 'rb'))
+vps = pickle.load(open(os.path.join(g_temp, g_tmp_vp), 'rb'))
 vps = [vps[name] for name in g_render_objs]
 
 for obj_name, vp in zip(g_render_objs, vps):
@@ -85,7 +85,3 @@ for obj_name, vp in zip(g_render_objs, vps):
     
     render_pose_by_vp_lists(pose_folder, vp)
     
-
-#for obj_path_list in obj_path_list:
-#    for obj_p in obj_path_list:
-#        render(obj_p, viewpoint_list)
