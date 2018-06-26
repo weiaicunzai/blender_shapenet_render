@@ -4,6 +4,13 @@ Aviable function:
 - clear_mash: delete all the mesh in the secene
 - scene_setting_init: set scene configurations
 - node_setting_init: set node configurations
+- camera_setting_init: set camera configurations
+- render: render depth image for each viewpoint
+- render_depth_by_vp_lists: wrapper function for
+    render, render one obj file by multiple viewpoints
+- render_objs_by_one_vp: wrapper function for
+    render, render multiple objs by one vp
+- set_depth_path: set depth image output path
 
 author baiyu
 """
@@ -193,26 +200,19 @@ def init_all():
     camera_setting_init()
     node_setting_init()
 
-
+### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 init_all()
 
-obj_path = pickle.load(open(os.path.join(g_temp, g_tmp_path), 'rb'))
-vps = pickle.load(open(os.path.join(g_temp, g_tmp_vp), 'rb'))
+result_dict = pickle.load(open(os.path.join(g_temp, g_result_dict), 'rb'))
 
-obj_path = [obj_path[name] for name in g_render_objs]
-vps = [vps[name] for name in g_render_objs]
-
-for obj_name, obj_path_list, viewpoint_list in zip(g_render_objs, obj_path, vps):
-
+for obj_name, models in result_dict.items():
     obj_folder = os.path.join(g_syn_depth_folder, obj_name)
     if not os.path.exists(obj_folder):
         os.mkdir(obj_folder)
-    set_depth_path(obj_folder)
-
-    for obj in obj_path_list:
+    
+    for model in models:
         clear_mesh()
-        bpy.ops.import_scene.obj(filepath=obj)
-        render_depth_by_vp_lists(obj, viewpoint_list)
-
-
+        bpy.ops.import_scene.obj(filepath=model.path)
+        set_depth_path(obj_folder)
+        render_depth_by_vp_lists(model.path, model.vps)

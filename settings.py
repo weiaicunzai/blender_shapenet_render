@@ -9,8 +9,6 @@ author baiyu
 g_shapenet_path = '/media/admin-bai/000CA9E800027341/DATA/RenderForCNN-master/datasets/shapenetcore'
 g_blender_excutable_path = '/home/admin-bai/Downloads/blender-2.79b-linux-glibc219-x86_64/blender'
 
-
-
 #if you have multiple viewpoint files, add to the dict
 #files contains azimuth,elevation,tilt angles and distance for each row
 g_view_point_file ={
@@ -23,11 +21,6 @@ g_view_point_file ={
 
 g_render_objs = ['chair', 'table', 'sofa', 'bed', 'bottle']
 
-#store chosen obj file path during runtime
-#no nned to change it
-g_obj_path = {}
-g_vps = {}
-
 #change this path to your background image folder
 g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/SUN2012pascalformat/JPEGImages'
 
@@ -36,9 +29,7 @@ g_syn_rgb_folder = 'syn_rgb'
 g_syn_depth_folder = 'syn_depth'
 g_syn_pose_folder = 'syn_pose'
 g_temp = 'tmp_data'
-g_tmp_path = 'path.p'
-g_tmp_vp = 'vp.p'
-
+g_result_dict = 'result.p'
 
 #background image composite
 #enum in [‘RELATIVE’, ‘ABSOLUTE’, ‘SCENE_SIZE’, ‘RENDER_SIZE’], default ‘RELATIVE’
@@ -72,9 +63,9 @@ g_depth_use_file_extension = True
 g_engine_type = 'CYCLES'
 
 #output image size =  (g_resolution_x * resolution_percentage%, g_resolution_y * resolution_percentage%)
-g_resolution_x = 1920
-g_resolution_y = 1080
-g_resolution_percentage = 50
+g_resolution_x = 640
+g_resolution_y = 480
+g_resolution_percentage = 100
 
 
 #performance:
@@ -84,7 +75,6 @@ g_gpu_render_enable = True
 #if you are using gpu render, recommand to set hilbert spiral to 256 or 512
 #default value for cpu render is fine
 g_hilbert_spiral = 512 
-
 
 #total 55 categories
 g_shapenet_categlory_pair = {

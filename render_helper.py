@@ -3,11 +3,16 @@ data to the format we want
 
 
 Available functions:
-- load_viewpoint: read viewpoint file
+- load_viewpoint: read viewpoint file, load viewpoints
+- load_viewpoints: wrapper function for load_viewpoint
 - load_object_lists: return a generator of object file pathes
 - camera_location: return a tuple contains camera location (x, y, z)
     in world coordinates system
 - camera_rot_XYZEuler: return a tuple contains cmera ration
+- random_sample_objs: sample obj files randomly
+- random_sample_vps: sample vps from viewpoint file
+- random_sample_objs_and_vps: wrapper function for sample obj
+                              and viewpoints
 
 author baiyu
 """
@@ -22,8 +27,10 @@ from collections import namedtuple
 from settings import *
 
 # need to write outside the function, otherwise pickle can find
-# where Param were defined
-Param = namedtuple('Param',['azimuth', 'elevation', 'tilt', 'distance'])
+# where VP were defined
+VP = namedtuple('VP',['azimuth', 'elevation', 'tilt', 'distance'])
+Model = namedtuple('Model', ['path', 'vps'])
+
 def load_viewpoint(viewpoint_file):
     """read viewpoints from a file, can only read one file at once
 
@@ -36,7 +43,7 @@ def load_viewpoint(viewpoint_file):
     """
     with open(viewpoint_file) as viewpoints:
         for line in viewpoints.readlines():
-            yield Param(*line.strip().split())
+            yield VP(*line.strip().split())
 
 def load_viewpoints(viewpoint_file_list):
     """load multiple viewpoints file from given lists
@@ -170,27 +177,54 @@ def random_sample_objs(num_per_cat):
     
     return obj_path_dict
     
-def random_sample_vps(num_per_cat):
-    """randomly sample vps from vp lists, for each category,
+def random_sample_vps(obj_path_dict, num_per_model):
+    """randomly sample vps from vp lists, for each model,
     we sample num_per_cat number vps, and save the result to
     g_vps
     Args:
-        num_per_cat: how many view point to sample per category
+        obj_pathes: result of function random_sample_objs, 
+                    contains obj file pathes
+        num_per_cat: how many view point to sample per model 
     
     Returns:
-        vps: a dictionary contains category name and its corresponding
+        result_dict: a dictionary contains model name and its corresponding
              viewpoints
     """
 
     vp_file_lists = [g_view_point_file[name] for name in g_render_objs]
     viewpoint_lists = load_viewpoints(vp_file_lists)
 
-    vp_dict = {}
-    for cat, vps in zip(g_render_objs, viewpoint_lists):
+    obj_file_pathes = [obj_path_dict[name] for name in g_render_objs]
+
+    result_dict = {}
+    for cat, pathes, vps in zip(g_render_objs, obj_file_pathes, viewpoint_lists):
         vps = list(vps)
         random.shuffle(vps)
-        samples = random.sample(vps, num_per_cat)
-        vp_dict[cat] = samples
+        models = []
+        for p in pathes: 
+            samples = random.sample(vps, num_per_model)
+            models.append(Model(p, samples))
+            
+        result_dict[cat] = models
+    return result_dict 
 
-    return vp_dict 
+def random_sample_objs_and_vps(model_num_per_cat, vp_num_per_model):
+    """wrapper function for randomly sample model and viewpoints
+    and return the result, each category in g_render_objs contains
+    multiple Model object, each Model object has path and vps attribute
+    path attribute indicates where the obj file is and vps contains 
+    viewpoints to render the obj file
+
+    Args:
+        model_num_per_cat: how many models you want to sample per category
+        vp_num_per_model: how many viewpoints you want to sample per model
+    
+    Returns:
+        return a dict contains Model objects
+    """
+
+    obj_path_dict = random_sample_objs(model_num_per_cat)
+    result_dict = random_sample_vps(obj_path_dict, vp_num_per_model)
+
+    return result_dict
 

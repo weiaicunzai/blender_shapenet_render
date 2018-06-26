@@ -89,7 +89,6 @@ def node_setting_init():
     links.new(render_layer_node.outputs[0], alpha_over_node.inputs[2])
     links.new(alpha_over_node.outputs[0], file_output_node.inputs[0])
 
-
 def render(obj_path, viewpoint):
     """render rbg image 
 
@@ -195,35 +194,19 @@ def set_image_path(new_path):
     file_output_node = bpy.context.scene.node_tree.nodes[4]
     file_output_node.base_path = new_path
 
-
+### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 init_all()
 
-#My viewpoint list for each object(7 different objects for each 
-#category) has 20000 viewpoint, I'll randomly choose 576 viewpoints 
-#for each object from thoes 20000 viewpoints to generate training data
+result_dict = pickle.load(open(os.path.join(g_temp, g_result_dict), 'rb'))
 
-### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
-
-
-obj_path = pickle.load(open(os.path.join(g_temp, g_tmp_path), 'rb'))
-vps = pickle.load(open(os.path.join(g_temp, g_tmp_vp), 'rb'))
-
-obj_path = [obj_path[name] for name in g_render_objs]
-vps = [vps[name] for name in g_render_objs]
-
-for obj_name, obj_list, vp_list in zip(g_render_objs, obj_path, vps):
-
+for obj_name, models in result_dict.items():
     obj_folder = os.path.join(g_syn_rgb_folder, obj_name)
     if not os.path.exists(obj_folder):
         os.mkdir(obj_folder)
-    set_image_path(obj_folder)
-
-    for obj in obj_list:
-        clear_mesh()
-        bpy.ops.import_scene.obj(filepath=obj)
-        render_obj_by_vp_lists(obj, vp_list)
     
-
-     
-
+    for model in models:
+        clear_mesh()
+        bpy.ops.import_scene.obj(filepath=model.path)
+        set_image_path(obj_folder)
+        render_obj_by_vp_lists(model.path, model.vps)

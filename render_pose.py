@@ -52,7 +52,7 @@ def render(pose_folder, viewpoint):
         os.mkdir(g_syn_pose_folder)
 
     current_frame = bpy.context.scene.frame_current
-    np.savetxt(os.path.join(g_syn_pose_folder, 'blender-{:06}.pose.txt'.format(current_frame)), m)
+    np.savetxt(os.path.join(pose_folder, 'blender-{:06}.pose.txt'.format(current_frame)), m)
     bpy.context.scene.frame_set(current_frame + 1)
 
 def render_pose_by_vp_lists(pose_folder, viewpoints):
@@ -74,14 +74,15 @@ def render_pose_by_vp_lists(pose_folder, viewpoints):
     for vp in vps:
         render(pose_folder, vp)
 
-vps = pickle.load(open(os.path.join(g_temp, g_tmp_vp), 'rb'))
-vps = [vps[name] for name in g_render_objs]
+### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
-for obj_name, vp in zip(g_render_objs, vps):
+result_dict = pickle.load(open(os.path.join(g_temp, g_result_dict), 'rb'))
 
-    pose_folder = os.path.join(g_syn_pose_folder, obj_name)
-    if not os.path.exists(pose_folder):
-        os.mkdir(pose_folder)
+for obj_name, models in result_dict.items():
+    obj_folder = os.path.join(g_syn_pose_folder, obj_name)
+    if not os.path.exists(obj_folder):
+        os.mkdir(obj_folder)
     
-    render_pose_by_vp_lists(pose_folder, vp)
-    
+    for model in models:
+        render_pose_by_vp_lists(obj_folder, model.vps)
+        
