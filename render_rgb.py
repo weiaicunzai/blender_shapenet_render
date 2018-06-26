@@ -10,6 +10,7 @@ author baiyu
 import sys
 import os
 import random
+import pickle
 import bpy
 
 abs_path = os.path.abspath(__file__)
@@ -17,7 +18,7 @@ sys.path.append(os.path.dirname(abs_path))
 
 from render_helper import *
 from settings import *
-
+import settings
 
 def clear_mesh():
     """ clear all meshes in the secene
@@ -82,65 +83,139 @@ def node_setting_init():
     links.new(alpha_over_node.outputs[0], file_output_node.inputs[0])
 
 
-def render(obj_path, viewpoints):
+def render(obj_path, viewpoint):
     """render rbg image 
 
-    render a object rgb image by given camera viewpoints and
-    choose random image as background
+    render a object rgb image by a given camera viewpoint and
+    choose random image as background, only render one image
+    at a time.
 
     Args:
         obj_path: a string variable indicate the obj file path
-        viewpoints: a generator of cmera viewpoints
+        viewpoint: a vp parameter(contains azimuth,elevation,tilt angles and distance)
     """
 
     background_images = os.listdir(g_background_image_path)
 
-    for index, vp in enumerate(viewpoint_list):
-        cam_location = camera_location(vp.azimuth, vp.elevation, vp.distance)
-        cam_rot = camera_rot_XYZEuler(vp.azimuth, vp.elevation, vp.tilt)
+    vp = viewpoint
+    cam_location = camera_location(vp.azimuth, vp.elevation, vp.distance)
+    cam_rot = camera_rot_XYZEuler(vp.azimuth, vp.elevation, vp.tilt)
 
-        cam_obj.location[0] = cam_location[0]
-        cam_obj.location[1] = cam_location[1]
-        cam_obj.location[2] = cam_location[2]
+    cam_obj = bpy.data.objects['Camera']
+    cam_obj.location[0] = cam_location[0]
+    cam_obj.location[1] = cam_location[1]
+    cam_obj.location[2] = cam_location[2]
 
-        cam_obj.rotation_euler[0] = cam_rot[0]
-        cam_obj.rotation_euler[1] = cam_rot[1]
-        cam_obj.rotation_euler[2] = cam_rot[2]
+    cam_obj.rotation_euler[0] = cam_rot[0]
+    cam_obj.rotation_euler[1] = cam_rot[1]
+    cam_obj.rotation_euler[2] = cam_rot[2]
 
-        if not os.path.exists(g_syn_rgb_folder):
-            os.mkdir(g_syn_rgb_folder)
-        
-        image_name = random.choice(background_images)
-        image_path = os.path.join(g_background_image_path, image_name)
+    if not os.path.exists(g_syn_rgb_folder):
+        os.mkdir(g_syn_rgb_folder)
+    image_name = random.choice(background_images)
+    image_path = os.path.join(g_background_image_path, image_name)
 
-        image_node = bpy.context.scene.node_tree.nodes[0]
-        image_node.image = bpy.data.images.load(image_path)
-        file_output_node = bpy.context.scene.node_tree.nodes[4]
-        file_output_node.file_slots[0].path = 'blender-######.color.png' # blender placeholder #
-        bpy.context.scene.frame_set(index + 1)
+    image_node = bpy.context.scene.node_tree.nodes[0]
+    image_node.image = bpy.data.images.load(image_path)
+    file_output_node = bpy.context.scene.node_tree.nodes[4]
+    file_output_node.file_slots[0].path = 'blender-######.color.png' # blender placeholder #
 
-        bpy.ops.render.render(write_still=True)
+    #start rendering
+    bpy.ops.render.render(write_still=True)
+
+    current_frame = bpy.context.scene.frame_current
+    bpy.context.scene.frame_set(current_frame + 1)
+
+def render_obj_by_vp_lists(obj_path, viewpoints):
+    """ render one obj file by a given viewpoint list
+    a wrapper function for render()
+
+    Args:
+        obj_path: a string variable indicate the obj file path
+        viewpoints: an iterable object of vp parameter(contains azimuth,elevation,tilt angles and distance)
+    """
+
+    if isinstance(viewpoints, tuple):
+        vp_lists = [viewpoints]
+
+    try:
+        vp_lists = iter(viewpoints)
+    except TypeError:
+        print("viewpoints is not an iterable object")
+    
+    for vp in vp_lists:
+        render(obj_path, vp)
+
+def render_objs_by_one_vp(obj_pathes, viewpoint):
+    """ render multiple obj files by a given viewpoint
+
+    Args:
+        obj_paths: an iterable object contains multiple
+                   obj file pathes
+        viewpoint: a namedtuple object contains azimuth,
+                   elevation,tilt angles and distance
+    """ 
+
+    if isinstance(obj_pathes, str):
+        obj_lists = [obj_pathes]
+    
+    try:
+        obj_lists = iter(obj_lists)
+    except TypeError:
+        print("obj_pathes is not an iterable object")
+    
+    for obj_path in obj_lists:
+        render(obj_path, viewpoint)
+
+def init_all():
+    """init everything we need for rendering
+    an image
+    """
+    scene_setting_init(g_gpu_render_enable)
+    node_setting_init()
+    cam_obj = bpy.data.objects['Camera']
+    cam_obj.rotation_mode = g_rotation_mode
+
+    bpy.data.objects['Lamp'].data.energy = 50
+    bpy.ops.object.lamp_add(type='SUN')
+
+def set_image_path(new_path):
+    """ set image output path to new_path
+
+    Args:
+        new rendered image output path
+    """
+    file_output_node = bpy.context.scene.node_tree.nodes[4]
+    file_output_node.base_path = new_path
 
 
 
-scene_setting_init(g_gpu_render_enable)
-node_setting_init()
+init_all()
+
+#My viewpoint list for each object(7 different objects for each 
+#category) has 20000 viewpoint, I'll randomly choose 576 viewpoints 
+#for each object from thoes 20000 viewpoints to generate training data
+
+### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 
-obj_path_list = load_object_list(g_render_objs)
-viewpoint_list = load_viewpoint(g_view_point_file['chair'])
+obj_path = pickle.load(open("tmp_data/path.p", 'rb'))
+vps = pickle.load(open("tmp_data/vp.p", 'rb'))
 
 
-cam_obj = bpy.data.objects['Camera']
-cam_obj.rotation_mode = g_rotation_mode
+for obj_name, obj_list, vp_list in zip(g_render_objs, obj_path.values(), vps.values()):
 
-bpy.data.objects['Lamp'].data.energy = 50
-#bpy.data.objects['Lamp'].type = 'SUN'
-bpy.ops.object.lamp_add(type='POINT', location=(-3, -3, 3))
+    obj_folder = os.path.join(g_syn_rgb_folder, obj_name)
+    if not os.path.exists(obj_folder):
+        os.mkdir(obj_folder)
+    set_image_path(obj_folder)
 
-for obj_lists in obj_path_list:
-    for obj_p in obj_lists:
+
+    for obj in obj_list:
         clear_mesh()
-        bpy.ops.import_scene.obj(filepath=obj_p)
-        render(obj_p, obj_lists)
+        bpy.ops.import_scene.obj(filepath=obj)
+        render_obj_by_vp_lists(obj, vp_list)
+    
+
+     
 

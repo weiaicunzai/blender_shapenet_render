@@ -14,8 +14,19 @@ g_blender_excutable_path = '/home/admin-bai/Downloads/blender-2.79b-linux-glibc2
 #if you have multiple viewpoint files, add to the dict
 #files contains azimuth,elevation,tilt angles and distance for each row
 g_view_point_file ={
-    'chair' : 'view_points/chair.txt'
+    'chair' : 'view_points/chair.txt',
+    'bottle' : 'view_points/bottle.txt',
+    'table' : 'view_points/diningtable.txt',
+    'sofa' : 'view_points/sofa.txt',
+    'bed' : 'view_points/bed.txt'
 }
+
+g_render_objs = ['chair', 'table', 'sofa', 'bed', 'bottle']
+
+#store chosen obj file path during runtime
+#no nned to change it
+g_obj_path = {}
+g_vps = {}
 
 #change this path to your background image folder
 g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/SUN2012pascalformat/JPEGImages'
@@ -72,7 +83,6 @@ g_gpu_render_enable = True
 #default value for cpu render is fine
 g_hilbert_spiral = 512 
 
-g_render_objs = ['chair', 'table', 'sofa', 'bed', 'bookshelf']
 
 #total 55 categories
 g_shapenet_categlory_pair = {

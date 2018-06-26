@@ -3,13 +3,14 @@
 Aviable function:
 - clear_mash: delete all the mesh in the secene
 - scene_setting_init: set scene configurations
-
+- node_setting_init: set node configurations
 
 author baiyu
 """
 
 import sys
 import os
+import pickle
 import bpy
 
 abs_path = os.path.abspath(__file__)
@@ -100,49 +101,115 @@ def camera_setting_init():
     bpy.data.cameras['Camera'].clip_end = g_depth_clip_end
     bpy.data.objects['Camera'].rotation_mode = g_rotation_mode
 
-def render(obj_path, viewpoints):
+def render(obj_path, viewpoint):
     """render z pass 
 
-    render a object z pass map by given camera viewpoints
+    render a object z pass map by a given camera viewpoints
 
     Args:
         obj_path: a string variable indicate the obj file path
-        viewpoints: a generator of cmera viewpoints
+        viewpoint: a parameter of camera parameters
     """
 
-    for index, vp in enumerate(viewpoint_list):
-        cam_location = camera_location(vp.azimuth, vp.elevation, vp.distance)
-        cam_rot = camera_rot_XYZEuler(vp.azimuth, vp.elevation, vp.tilt)
+#    for index, vp in enumerate(viewpoint_list):
+    vp = viewpoint
+    cam_location = camera_location(vp.azimuth, vp.elevation, vp.distance)
+    cam_rot = camera_rot_XYZEuler(vp.azimuth, vp.elevation, vp.tilt)
    
-        bpy.data.objects['Camera'].location[0] = cam_location[0]
-        bpy.data.objects['Camera'].location[1] = cam_location[1]
-        bpy.data.objects['Camera'].location[2] = cam_location[2]
+    bpy.data.objects['Camera'].location[0] = cam_location[0]
+    bpy.data.objects['Camera'].location[1] = cam_location[1]
+    bpy.data.objects['Camera'].location[2] = cam_location[2]
 
-        bpy.data.objects['Camera'].rotation_euler[0] = cam_rot[0]
-        bpy.data.objects['Camera'].rotation_euler[1] = cam_rot[1]
-        bpy.data.objects['Camera'].rotation_euler[2] = cam_rot[2]
+    bpy.data.objects['Camera'].rotation_euler[0] = cam_rot[0]
+    bpy.data.objects['Camera'].rotation_euler[1] = cam_rot[1]
+    bpy.data.objects['Camera'].rotation_euler[2] = cam_rot[2]
 
-        if not os.path.exists(g_syn_depth_folder):
-            os.mkdir(g_syn_depth_folder)
+    if not os.path.exists(g_syn_depth_folder):
+        os.mkdir(g_syn_depth_folder)
 
-        file_output_node = bpy.context.scene.node_tree.nodes[2]
-        file_output_node.file_slots[0].path = 'blender-######.depth.png' # blender placeholder #
-        bpy.context.scene.frame_set(index + 1)
+    file_output_node = bpy.context.scene.node_tree.nodes[2]
+    file_output_node.file_slots[0].path = 'blender-######.depth.png' # blender placeholder #
 
-        bpy.ops.render.render(write_still=True)
+    bpy.ops.render.render(write_still=True)
+
+    current_frame = bpy.context.scene.frame_current
+    bpy.context.scene.frame_set(current_frame + 1)
+
+def render_depth_by_vp_lists(obj_path, viewpoints):
+    """ render one depth image by a given viewpoint list
+    a wrapper function for render()
+
+    Args:
+        obj_path: a string variable indicate the obj file path
+        viewpoints: an iterable object of vp parameter(contains azimuth,elevation,tilt angles and distance)
+    """
+
+    if isinstance(viewpoints, tuple):
+        vp_lists = [viewpoints]
+
+    try:
+        vp_lists = iter(viewpoints)
+    except TypeError:
+        print("viewpoints is not an iterable object")
+    
+    for vp in vp_lists:
+        render(obj_path, vp)
+
+def render_objs_by_one_vp(obj_pathes, viewpoint):
+    """ render multiple depth image by a given viewpoint
+
+    Args:
+        obj_paths: an iterable object contains multiple
+                   obj file pathes
+        viewpoint: a namedtuple object contains azimuth,
+                   elevation,tilt angles and distance
+    """ 
+
+    if isinstance(obj_pathes, str):
+        obj_lists = [obj_pathes]
+    
+    try:
+        obj_lists = iter(obj_lists)
+    except TypeError:
+        print("obj_pathes is not an iterable object")
+    
+    for obj_path in obj_lists:
+        render(obj_path, viewpoint)
+
+
+def set_depth_path(new_path):
+    """ set depth output path to new_path
+
+    Args:
+        new rendered depth output path
+    """
+    file_output_node = bpy.context.scene.node_tree.nodes[2]
+    file_output_node.base_path = new_path
+
+def init_all():
+    """ initialze everything we need for z pass render
+    """
+    scene_setting_init(g_gpu_render_enable)
+    camera_setting_init()
+    node_setting_init()
 
 
 
-scene_setting_init(g_gpu_render_enable)
-camera_setting_init()
-node_setting_init()
+init_all()
 
-obj_path_list = load_object_list(g_render_objs)
-viewpoint_list = load_viewpoint(g_view_point_file['chair'])
+obj_path = pickle.load(open("tmp_data/path.p", 'rb'))
+vps = pickle.load(open("tmp_data/vp.p", 'rb'))
 
-for obj_path_list in obj_path_list:
-    for obj_p in obj_path_list:
+for obj_name, obj_path_list, viewpoint_list in zip(g_render_objs, obj_path.values(), vps.values()):
+
+    obj_folder = os.path.join(g_syn_depth_folder, obj_name)
+    if not os.path.exists(obj_folder):
+        os.mkdir(obj_folder)
+    set_depth_path(obj_folder)
+
+    for obj in obj_path_list:
         clear_mesh()
-        bpy.ops.import_scene.obj(filepath=obj_p)
-        render(obj_p, viewpoint_list)
+        bpy.ops.import_scene.obj(filepath=obj)
+        render_depth_by_vp_lists(obj, viewpoint_list)
+
 
