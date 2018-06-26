@@ -202,14 +202,15 @@ init_all()
 obj_path = pickle.load(open("tmp_data/path.p", 'rb'))
 vps = pickle.load(open("tmp_data/vp.p", 'rb'))
 
+obj_path = [obj_path[name] for name in g_render_objs]
+vps = [vps[name] for name in g_render_objs]
 
-for obj_name, obj_list, vp_list in zip(g_render_objs, obj_path.values(), vps.values()):
+for obj_name, obj_list, vp_list in zip(g_render_objs, obj_path, vps):
 
     obj_folder = os.path.join(g_syn_rgb_folder, obj_name)
     if not os.path.exists(obj_folder):
         os.mkdir(obj_folder)
     set_image_path(obj_folder)
-
 
     for obj in obj_list:
         clear_mesh()

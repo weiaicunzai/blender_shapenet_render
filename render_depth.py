@@ -200,7 +200,10 @@ init_all()
 obj_path = pickle.load(open("tmp_data/path.p", 'rb'))
 vps = pickle.load(open("tmp_data/vp.p", 'rb'))
 
-for obj_name, obj_path_list, viewpoint_list in zip(g_render_objs, obj_path.values(), vps.values()):
+obj_path = [obj_path[name] for name in g_render_objs]
+vps = [vps[name] for name in g_render_objs]
+
+for obj_name, obj_path_list, viewpoint_list in zip(g_render_objs, obj_path, vps):
 
     obj_folder = os.path.join(g_syn_depth_folder, obj_name)
     if not os.path.exists(obj_folder):
