@@ -23,7 +23,8 @@ if __name__ == '__main__':
     #change the numbers to what you want to generate
     #2 models per category
     #3 vps for each model(each vp will be used for only once)
-    result_dict = random_sample_objs_and_vps(2, 3)
+    print("sampling data.....")
+    result_dict = random_sample_objs_and_vps(10, 3)
     if not os.path.exists(g_temp):
         os.mkdir(g_temp)
 

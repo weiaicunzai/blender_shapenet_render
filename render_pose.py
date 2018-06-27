@@ -77,8 +77,9 @@ def render_pose_by_vp_lists(pose_folder, viewpoints):
 ### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 result_dict = pickle.load(open(os.path.join(g_temp, g_result_dict), 'rb'))
+result_list = [result_dict[name] for name in g_render_objs]
 
-for obj_name, models in result_dict.items():
+for obj_name, models in zip(g_render_objs, result_list):
     obj_folder = os.path.join(g_syn_pose_folder, obj_name)
     if not os.path.exists(obj_folder):
         os.mkdir(obj_folder)

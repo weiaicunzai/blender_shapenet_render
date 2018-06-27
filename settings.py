@@ -22,7 +22,7 @@ g_view_point_file ={
 g_render_objs = ['chair', 'table', 'sofa', 'bed', 'bottle']
 
 #change this path to your background image folder
-g_background_image_path = '/media/admin-bai/000CA9E800027341/DATA/SUN2012pascalformat/JPEGImages'
+g_background_image_path = 'background_image'
 
 #folders to store synthetic data
 g_syn_rgb_folder = 'syn_rgb'
