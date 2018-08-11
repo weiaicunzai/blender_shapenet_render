@@ -59,9 +59,10 @@ and other configurations you might want to change:
 for more configuration informations, plz refer to [Blender API Document](https://docs.blender.org/api/2.79/)
 ### 2. viewpoint file
 
-All txt files in the folder view_points are viewpoints file, you can generate new viewpoints file using [render for cnn](https://github.com/ShapeNet/RenderForCNN), you can change the the camera clip distance by modifying varibale 
-```distance_min``` and ```distance_max``` in RenderForCNN/blob/master/render_pipeline/kde/sample_viewpoints.m, and
-view point number generated per categlory by modifying ```num_samples``` in RenderForCNN/blob/master/render_pipeline/kde/run_sampling.m
+All txt files in the folder view_points are viewpoints file, you can generate new viewpoints file using [render for cnn](https://github.com/ShapeNet/RenderForCNN)
+- you can change the the camera clip distance by modifying varibale ```distance_min``` and ```distance_max``` in ```RenderForCNN/blob/master/render_pipeline/kde/sample_viewpoints.m```, 
+
+- and view point number generated per categlory by modifying ```num_samples``` in ```RenderForCNN/blob/master/render_pipeline/kde/run_sampling.m```
 
 ### 3. start rendering
 
