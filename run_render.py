@@ -16,9 +16,9 @@ from settings import *
 
 if __name__ == '__main__':
 
-    #you could also just comment these 5 lines after run it once
+    #you could also just comment these 4 lines after run it once
     #if you want to use the same models and vps instead of generate
-    #again randomly
+    #again randomly every time you run the program
 
     #change the numbers to what you want to generate
     #2 models per category
