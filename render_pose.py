@@ -82,7 +82,7 @@ result_list = [result_dict[name] for name in g_render_objs]
 for obj_name, models in zip(g_render_objs, result_list):
     obj_folder = os.path.join(g_syn_pose_folder, obj_name)
     if not os.path.exists(obj_folder):
-        os.mkdir(obj_folder)
+        os.makedirs(obj_folder)
     
     for model in models:
         render_pose_by_vp_lists(obj_folder, model.vps)
