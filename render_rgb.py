@@ -204,7 +204,7 @@ result_list = [result_dict[name] for name in g_render_objs]
 for obj_name, models in zip(g_render_objs, result_list):
     obj_folder = os.path.join(g_syn_rgb_folder, obj_name)
     if not os.path.exists(obj_folder):
-        os.mkdir(obj_folder)
+        os.makedirs(obj_folder)
     
     for model in models:
         clear_mesh()
