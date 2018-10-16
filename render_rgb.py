@@ -194,6 +194,39 @@ def set_image_path(new_path):
     file_output_node = bpy.context.scene.node_tree.nodes[4]
     file_output_node.base_path = new_path
 
+    def combine_objects():
+    """combine all objects in the scene
+    """
+    scene = bpy.context.scene
+    obs = []
+
+    for ob in scene.objects:
+    # whatever objects you want to join...
+        if ob.type == 'MESH':
+            obs.append(ob)
+
+    ctx = bpy.context.copy()
+    # one of the objects to join
+    ctx['active_object'] = obs[0]
+    ctx['selected_objects'] = obs
+    # we need the scene bases as well for joining
+    ctx['selected_editable_bases'] = [scene.object_bases[ob.name] for ob in obs]
+    bpy.ops.object.join(ctx)
+
+def scale_objects(scale_factor):
+    """Scale all mesh objects in the scene, use combine_objects before this
+    function
+    Args:
+        scale_factor: scale percentage
+    """
+    scene = bpy.context.scene
+    for ob in scene.objects:
+        if ob.type == 'MESH':
+            ob.select = True
+    
+    obj = bpy.context.scene.objects.active
+    obj.scale = (scale_factor, scale_factor, scale_factor)
+
 ### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 init_all()
