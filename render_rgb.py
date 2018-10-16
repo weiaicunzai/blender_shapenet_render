@@ -194,7 +194,7 @@ def set_image_path(new_path):
     file_output_node = bpy.context.scene.node_tree.nodes[4]
     file_output_node.base_path = new_path
 
-    def combine_objects():
+def combine_objects():
     """combine all objects in the scene
     """
     scene = bpy.context.scene
