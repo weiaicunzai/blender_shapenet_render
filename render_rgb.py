@@ -220,10 +220,12 @@ def scale_objects(scale_factor):
         scale_factor: scale percentage
     """
     scene = bpy.context.scene
+
     for ob in scene.objects:
+        ob.select = False
         if ob.type == 'MESH':
-            ob.select = True
-    
+            bpy.context.scene.objects.active = ob
+
     obj = bpy.context.scene.objects.active
     obj.scale = (scale_factor, scale_factor, scale_factor)
 
@@ -242,5 +244,7 @@ for obj_name, models in zip(g_render_objs, result_list):
     for model in models:
         clear_mesh()
         bpy.ops.import_scene.obj(filepath=model.path)
+        #combine_objects()
+        #scale_objects(0.5)
         set_image_path(obj_folder)
         render_obj_by_vp_lists(model.path, model.vps)
