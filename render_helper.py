@@ -13,7 +13,6 @@ Available functions:
 - random_sample_vps: sample vps from viewpoint file
 - random_sample_objs_and_vps: wrapper function for sample obj
                               and viewpoints
-
 author baiyu
 """
 
