@@ -200,6 +200,40 @@ def init_all():
     camera_setting_init()
     node_setting_init()
 
+def combine_objects():
+    """combine all objects in the scene
+    """
+    scene = bpy.context.scene
+    obs = []
+
+    for ob in scene.objects:
+    # whatever objects you want to join...
+        if ob.type == 'MESH':
+            obs.append(ob)
+
+    ctx = bpy.context.copy()
+    # one of the objects to join
+    ctx['active_object'] = obs[0]
+    ctx['selected_objects'] = obs
+    # we need the scene bases as well for joining
+    ctx['selected_editable_bases'] = [scene.object_bases[ob.name] for ob in obs]
+    bpy.ops.object.join(ctx)
+
+def scale_objects(scale_factor):
+    """Scale all mesh objects in the scene, use combine_objects before this
+    function
+    Args:
+        scale_factor: scale percentage
+    """
+    scene = bpy.context.scene
+
+    for ob in scene.objects:
+        ob.select = False
+        if ob.type == 'MESH':
+            bpy.context.scene.objects.active = ob
+
+    obj = bpy.context.scene.objects.active
+    obj.scale = (scale_factor, scale_factor, scale_factor)
 ### YOU CAN WRITE YOUR OWN IMPLEMENTATION TO GENERATE DATA
 
 init_all()
@@ -215,5 +249,7 @@ for obj_name, models in zip(g_render_objs, result_list):
     for model in models:
         clear_mesh()
         bpy.ops.import_scene.obj(filepath=model.path)
+        #combine_objects()
+        #scale_objects(0.5)
         set_depth_path(obj_folder)
         render_depth_by_vp_lists(model.path, model.vps)
